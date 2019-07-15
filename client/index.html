@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://malsup.github.io/min/jquery.form.min.js"></script>
+</head>
+<!-- Body tag is where we will append our SVG and SVG objects-->
+<body>
+  <svg></svg>
+  <input type="radio" onchange="showA(this)" name="fileType" checked>ND2
+  <input type="radio" onchange="showB(this)" name="fileType">TIF <br>
+  <form action = "/uploader_nd2" method = "POST" 
+    enctype = "multipart/form-data"
+    id= "nd2_form">
+    ND2:
+    <input type = "file" name = "file" />
+    <input type = "submit"/>
+  </form>
+  <form action = "/uploader_tif" method = "POST" 
+    enctype = "multipart/form-data" 
+    id = "tif_form"
+    style="display: none">
+    DIC:
+    <input type = "file" name = "file" />
+    GFP:
+    <input type = "file" name = "file" />
+    <input type = "submit"/>
+  </form>
+</body>
+
+<script>
+  function showA(x) {
+   if (x.checked) {
+     document.getElementById("tif_form").style.display = "none";
+     document.getElementById("nd2_form").style.display = "initial";
+   }
+  }
+
+ function showB(x) {
+   if (x.checked) {
+     document.getElementById("nd2_form").style.display = "none";
+     document.getElementById("tif_form").style.display = "initial";
+   }
+  }
+</script>
+
+<!-- Load in the d3 library -->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="plot.js"></script>

@@ -1,0 +1,6 @@
+data/
+.vscode/
+client/img/
+.ipynb_checkpoints/
+__pycache__/
+*.hdf5
