@@ -21,6 +21,8 @@ def serve(path):
 
 @app.route('/uploader_nd2', methods = ['POST'])
 def upload_nd2():
+    if not os.path.isdir('data'):
+        os.mkdir('data')
     hasher = hashlib.md5()
     f = request.files['file']
     buf = f.read()
@@ -49,6 +51,10 @@ def upload_nd2():
 
 @app.route('/uploader_tif', methods = ['POST'])
 def upload_tif():
+    if not os.path.isdir('data'):
+        os.mkdir('data')
+    if not os.path.isdir('client/img'):
+        os.mkdir('client/img')
     hasher = hashlib.md5()
     f = request.files.getlist("file")
     buf1 = f[0].read()
