@@ -1,4 +1,4 @@
-from nd2reader import ND2Reader
+from pims import Bioformats
 import numpy as np
 from skimage import io
 import os
@@ -7,7 +7,7 @@ def nd2_read(fileName):
   """
   Channel Order: DIC GFP PBD
   """
-  with ND2Reader(fileName) as images:
+  with Bioformats(fileName) as images:
     images.bundle_axes="tzyxc"
     dim = images.sizes
     flip = np.zeros((dim["t"],dim["z"],dim["y"],dim["x"],dim["c"]),np.uint32)

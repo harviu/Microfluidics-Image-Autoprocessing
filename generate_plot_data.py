@@ -20,18 +20,26 @@ def with_out_mask(dic,gfp,mode):
   vals_max = []
   time=0
   x_length = dic.shape[2]
+  y_length = dic.shape[1]
 
   while(time<dic.shape[0]):
     #find chamber interesting area
-    max_dic = np.argmax(dic[time])
-    max_dic_x = max_dic%x_length
-    max_dic_y = math.floor(max_dic/x_length)
-    chamber_area = gfp[time,:,max_dic_x-5:max_dic_x+5]
+    max_area = 0
+    max_dic_x = -1
+    for i in range(x_length-6):
+      temp_area = dic[time,:,i:i+5]
+      if sum(sum(temp_area>100000))>max_area:
+        max_area = sum(sum(temp_area>100000))
+        max_dic_x=i+2
+    start = max(max_dic_x-30,0)
+    end = min(max_dic_x,dic.shape[2])
+    chamber_area = gfp[time,:,start:end]
+    # print(max_dic_x)
 
     #find max gfp
     max_gfp = np.argmax(chamber_area)
-    max_gfp_x = max_gfp%10+max_dic_x-5
-    max_gfp_y = math.floor(max_gfp/10)
+    max_gfp_x = max_gfp%30+max_dic_x-30
+    max_gfp_y = math.floor(max_gfp/30)
 
     #find max in background
     aoi = gfp[time,:,max_gfp_x-20:max_gfp_x+20]
