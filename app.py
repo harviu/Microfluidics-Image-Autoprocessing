@@ -23,6 +23,8 @@ def serve(path):
 def upload_nd2():
     if not os.path.isdir('data'):
         os.mkdir('data')
+    if not os.path.isdir('client/img'):
+        os.mkdir('client/img')
     hasher = hashlib.md5()
     f = request.files['file']
     buf = f.read()
