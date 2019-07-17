@@ -1,6 +1,6 @@
-data/
+data/*
 .vscode/
-client/img/
+client/img/*
 .ipynb_checkpoints/
 __pycache__/
 *.hdf5
