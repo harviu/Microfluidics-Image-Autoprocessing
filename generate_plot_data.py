@@ -31,15 +31,15 @@ def with_out_mask(dic,gfp,mode):
       if sum(sum(temp_area>100000))>max_area:
         max_area = sum(sum(temp_area>100000))
         max_dic_x=i+2
-    start = max(max_dic_x-30,0)
+    start = max(max_dic_x-15,0)
     end = min(max_dic_x,dic.shape[2])
     chamber_area = gfp[time,:,start:end]
     # print(max_dic_x)
 
     #find max gfp
     max_gfp = np.argmax(chamber_area)
-    max_gfp_x = max_gfp%30+max_dic_x-30
-    max_gfp_y = math.floor(max_gfp/30)
+    max_gfp_x = max_gfp%15+max_dic_x-15
+    max_gfp_y = math.floor(max_gfp/15)
 
     #find max in background
     aoi = gfp[time,:,max_gfp_x-20:max_gfp_x+20]
