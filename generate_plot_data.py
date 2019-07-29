@@ -71,7 +71,7 @@ def with_out_mask(dic,gfp,mode):
     else:
       vals.append(get3x3Ave(gfp[time],max_gfp_y,max_gfp_x)-max_back)
     time += 1
-  return (vals,start,end)
+  return vals
   
 
 def get5x5Ave(data,y,x):

@@ -39,7 +39,7 @@ def upload_nd2():
     img = sum_z(nd2_read("data/{}".format(filename)))
     dic = img[:,:,:,0]
     gfp = img[:,:,:,1]
-    vals,start,end = with_out_mask(dic,gfp,0)
+    vals = with_out_mask(dic,gfp,0)
     ret = {
         "vals":vals,
         "hex":hex,
@@ -47,7 +47,7 @@ def upload_nd2():
     if not os.path.isdir("client/img/"+hex):
         print("Generating new Image...")
         os.mkdir("client/img/"+hex)
-        new_png = one_to_png(img[:,:,start:end,1])
+        new_png = one_to_png(img[:,:,:,1])
         save_png(new_png,'client/img/'+hex)
     return jsonify(ret)
 
