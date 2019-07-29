@@ -1,5 +1,5 @@
 
-var vals = [78622.8515625, 48068.3515625, 79585.80078125, 120295.6484375, 111129.1015625, 40857.66796875, 55177.8359375, 120052.44921875, 136603.5, 69246.453125, 46621.05078125, 93774.56640625, 108917.30078125, 62260.9140625, 81457.19921875, 95606.30078125, 114946.3984375, 68704.953125, 79518.0859375, 101699.5859375, 99605.55078125, 48839.5, 74582.3984375, 92215.55078125, 79097.78125, 41175.515625, 78529.03125, 95554.8984375, 85655.3515625, 65018.8984375, 116035.8515625, 112636.33203125, 70432.5859375, 92882.44921875, 105976.30078125, 116087.6640625, 61522.953125, 72670.75, 109459.0, 113263.3515625, 56158.796875, 87028.94921875, 94363.3828125, 92029.3515625, 28646.69921875, 21327.80078125, 28012.6484375, 92682.94921875, 31825.734375, 100716.9140625, 100079.25, 77917.80078125, 44412.5, 77049.234375, 98450.3984375, 80284.5, 41938.015625, 52724.05078125, 54474.546875, 92322.8984375, 47862.6484375, 93434.015625, 104675.8828125, 108363.5, 48202.0, 97103.953125, 115002.25, 118466.33203125, 47900.765625, 48889.3984375, 69647.78125, 83825.30078125];
+var value={};
 // 2. Use the margin convention practice 
 var margin = {top: 10, right: 160, bottom: 100, left: 50}
 //   , width = window.innerWidth - margin.left - margin.right // Use the window's width 
@@ -90,6 +90,7 @@ function draw(vals,hex){
 function update_svg(vals){
   console.log(vals)
   $('svg').empty();
+  value = vals;
   draw(vals.vals,vals.hex);
 }
 
@@ -102,3 +103,21 @@ $('#tif_form')
   .ajaxForm({
     success: update_svg,
   });
+
+function exportCSV(){
+  let csv = 'Time,Value\n';
+  console.log(value.vals)
+  for (i=0;i<value.vals.length;i++){
+    csv+=i;
+    csv+=',';
+    csv+=value.vals[i];
+    csv+='\n'
+  }
+
+  console.log(csv);
+  var hiddenElement = document.createElement('a');
+  hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+  hiddenElement.target = '_blank';
+  hiddenElement.download = 'value.csv';
+  hiddenElement.click();
+}

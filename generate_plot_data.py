@@ -24,22 +24,24 @@ def with_out_mask(dic,gfp,mode):
 
   while(time<dic.shape[0]):
     #find chamber interesting area
+    CHAMBER_THRESHOLD = 100000
+    width = 20
     max_area = 0
     max_dic_x = -1
     for i in range(x_length-6):
       temp_area = dic[time,:,i:i+5]
-      if sum(sum(temp_area>100000))>max_area:
-        max_area = sum(sum(temp_area>100000))
-        max_dic_x=i+2
-    start = max(max_dic_x-15,0)
+      if sum(sum(temp_area>CHAMBER_THRESHOLD))>max_area:
+        max_area = sum(sum(temp_area>CHAMBER_THRESHOLD))
+        max_dic_x=i+5
+    start = max(max_dic_x-width,0)
     end = min(max_dic_x,dic.shape[2])
     chamber_area = gfp[time,:,start:end]
     # print(max_dic_x)
 
     #find max gfp
     max_gfp = np.argmax(chamber_area)
-    max_gfp_x = max_gfp%15+max_dic_x-15
-    max_gfp_y = math.floor(max_gfp/15)
+    max_gfp_x = max_gfp%width+max_dic_x-width
+    max_gfp_y = math.floor(max_gfp/width)
 
     #find max in background
     aoi = gfp[time,:,max_gfp_x-20:max_gfp_x+20]
@@ -58,6 +60,8 @@ def with_out_mask(dic,gfp,mode):
       d2.append(d1[i]-d1[i+1])
     max_d2 = np.argmax(d2)
     max_back = (hist[1][max_d2+1]+hist[1][max_d2+2])/2
+
+    #modes
     if mode == 0:
       vals.append(float(gfp[time,max_gfp_y,max_gfp_x]))
     elif mode == 1:
@@ -67,7 +71,7 @@ def with_out_mask(dic,gfp,mode):
     else:
       vals.append(get3x3Ave(gfp[time],max_gfp_y,max_gfp_x)-max_back)
     time += 1
-  return vals
+  return (vals,start,end)
   
 
 def get5x5Ave(data,y,x):
