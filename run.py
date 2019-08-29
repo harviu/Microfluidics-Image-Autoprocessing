@@ -39,7 +39,7 @@ if __name__ == '__main__':
                 
                 rfp = img[:,:,:,1]
                 vals,chosens,mark = calculate(rfp)
-                comment = '' if mark>0.4 else '_*'
+                comment = '' if mark>0.3 else '_*'
                 row2 = [key+'_rfp'+str(comment),] + vals
                 with open(csv_filename, 'a+', newline='') as csvfile:
                     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
