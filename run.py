@@ -8,7 +8,7 @@ import csv
 ##
 if __name__ == '__main__':
     nd2_at_end = re.compile("nd2$")
-    nd2_dirname = './nd2'
+    nd2_dirname = '../nd2'
     nd2_dirname_encoded = os.fsencode(nd2_dirname)
     for filename_encoded in os.listdir(nd2_dirname_encoded):
         filename = filename_encoded.decode('utf-8')
@@ -34,13 +34,13 @@ if __name__ == '__main__':
                 img = cropped[key]
                 gfp = img[:,:,:,2]
                 vals,chosens,mark = calculate(gfp)
-                comment = '' if mark>0.6 else '*'
-                row1 = [key+'_gfp_'+str(mark),] + vals
+                comment = '' if mark>0.6 else '_*'
+                row1 = [key+'_gfp'+str(comment),] + vals
                 
                 rfp = img[:,:,:,1]
                 vals,chosens,mark = calculate(rfp)
-                comment = '' if mark>0.4 else '*'
-                row2 = [key+'_rfp_'+str(mark),] + vals
+                comment = '' if mark>0.4 else '_*'
+                row2 = [key+'_rfp'+str(comment),] + vals
                 with open(csv_filename, 'a+', newline='') as csvfile:
                     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
                     csvwriter.writerow(row1)

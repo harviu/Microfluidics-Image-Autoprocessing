@@ -6,3 +6,5 @@ __pycache__/
 *.hdf5
 nd2/*
 result/*
+*.whl
+test.py
