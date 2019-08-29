@@ -9,13 +9,14 @@ import csv
 if __name__ == '__main__':
     nd2_at_end = re.compile("nd2$")
     nd2_dirname = '../nd2'
+    output_dirname = '../output'
     nd2_dirname_encoded = os.fsencode(nd2_dirname)
     for filename_encoded in os.listdir(nd2_dirname_encoded):
         filename = filename_encoded.decode('utf-8')
         if nd2_at_end.search(filename):
             nd2_filename = nd2_dirname + '/' + filename
             sample_name = os.path.splitext(filename)[0]
-            csv_filename = nd2_filename + '.csv'
+            csv_filename = output_dirname + '/' + sample_name + '.csv'
             # print(sample_name)
             nd2_image = sum_z(full_nd2_read(nd2_filename))
             cropped = cut_full_image(nd2_image)
