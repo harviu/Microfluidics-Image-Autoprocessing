@@ -14,12 +14,13 @@ module load python/3.7-conda4.5
 ## Activate the conda environment in which I've installed required packages for
 ## image processing
 ##
-cd /fs/project/park.294/Microfluidics-Image-Autoprocessing
+cd /fs/project/park.294
 source activate ./envs
 ## Run the python script that looks for nd2 files in a specific directory
 ## and processes them. I need to qsub this file from the directory in which
 ## loop-test.py lives.
 ##
+cd /fs/project/park.294/Microfluidics-Image-Autoprocessing
 python run.py
 ## Done--deactivate environment.
 ##
