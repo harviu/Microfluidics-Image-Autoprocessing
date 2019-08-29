@@ -6,6 +6,7 @@
 #PBS -m abe
 #PBS -M li.8460@osu.edu
 #PBS -e /fs/project/park.294/logs/
+#PBS -o /fs/project/park.294/logs/
 
 ## Load python so I have conda
 ##
