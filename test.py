@@ -1,7 +1,5 @@
-# from generate_mask import *
+from generate_values import *
 from image_process import *
-from generate_plot_data import *
-img = sum_z(nd2_read("../nd2/122718 y3469tr_001_xy04_crop_3a.nd2"))
-dic = img[:,:,:,0]
-gfp = img[:,:,:,1]
-vals = with_out_mask(dic,gfp,0)
+
+img = tif_read("./result/_122718 y3469_001_xy01/2b.tiff")
+print(hotspots(img[:,:,:,1],10))

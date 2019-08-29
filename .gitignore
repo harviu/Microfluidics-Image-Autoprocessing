@@ -4,3 +4,5 @@ client/img/*
 .ipynb_checkpoints/
 __pycache__/
 *.hdf5
+nd2/*
+result/*

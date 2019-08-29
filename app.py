@@ -1,8 +1,11 @@
 from flask import Flask, send_from_directory, jsonify, request
 import os
 from image_process import nd2_read,tif_read,sum_z,one_to_png,save_png
-from generate_plot_data import with_out_mask
+from generate_values import calculate
 import hashlib
+from matplotlib import pyplot as plt
+from math import sqrt, pi, cos, sin
+import numpy as np
 app = Flask(__name__)
 
 if __name__ == '__main__':
@@ -36,18 +39,34 @@ def upload_nd2():
         print("Saving new file...")
         with open('data/'+filename,"wb+") as f:
             f.write(buf)
-    img = sum_z(nd2_read("data/{}".format(filename)))
-    dic = img[:,:,:,0]
-    gfp = img[:,:,:,1]
-    vals = with_out_mask(dic,gfp,0)
+    img = tif_read("data/{}".format(filename))
+    gfp = img[:,:,:,2]
+    vals,chosens,_ = calculate(gfp)
+    # chosens = np.repeat(np.array(chosens)[None,:],72,0)
+    print(vals)
     ret = {
         "vals":vals,
         "hex":hex,
     }
     if not os.path.isdir("client/img/"+hex):
         print("Generating new Image...")
+        new_png = []
         os.mkdir("client/img/"+hex)
-        new_png = one_to_png(img[:,:,:,1])
+        time = 0
+        for img in gfp:
+            y,x,r = chosens[time]
+            show = img/np.max(img)
+            show[y,x] = 1
+            points = []
+            for t in range(100):
+                points.append((y + int(r * sin(2 * pi * t / 100)),x + int(r * cos(2 * pi * t / 100))))
+            for dot in points:
+                show[dot] = 1
+            show = (show * 255).astype(np.uint8)
+            new_png.append(show)
+            # plt.imshow(show)
+            # plt.show()
+            time+=1
         save_png(new_png,'client/img/'+hex)
     return jsonify(ret)
 
@@ -75,7 +94,7 @@ def upload_tif():
             f.write(buf2)
     dic = sum_z(tif_read("data/{}".format(filename1)))
     gfp = sum_z(tif_read("data/{}".format(filename2)))
-    vals = with_out_mask(dic,gfp,0)
+    vals = calculate(gfp)
     ret = {
         "vals":vals,
         "hex":hex,
