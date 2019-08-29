@@ -5,13 +5,16 @@
 #PBS -j oe
 #PBS -m abe
 #PBS -M li.8460@osu.edu
+#PBS -o /fs/project/park.294/logs/
+#PBS -e /fs/project/park.294/logs/
+
 ## Load python so I have conda
 ##
 module load python/3.7-conda4.5
 ## Activate the conda environment in which I've installed required packages for
 ## image processing
 ##
-cd /fs/project/park.294/
+cd /fs/project/park.294/Microfluidics-Image-Autoprocessing
 source activate ./envs
 ## Run the python script that looks for nd2 files in a specific directory
 ## and processes them. I need to qsub this file from the directory in which
