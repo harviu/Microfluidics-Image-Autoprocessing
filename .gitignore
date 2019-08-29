@@ -7,4 +7,4 @@ __pycache__/
 nd2/*
 result/*
 *.whl
-test.py
+test.*
