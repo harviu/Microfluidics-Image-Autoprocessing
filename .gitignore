@@ -8,3 +8,4 @@ nd2/*
 result/*
 *.whl
 test.*
+.idea/
