@@ -3,7 +3,6 @@ import os
 from image_process import nd2_read,tif_read,sum_z,one_to_png,save_png
 from generate_values import calculate
 import hashlib
-from matplotlib import pyplot as plt
 from math import sqrt, pi, cos, sin
 import numpy as np
 app = Flask(__name__)

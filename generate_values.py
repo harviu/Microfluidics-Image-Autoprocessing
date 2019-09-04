@@ -1,9 +1,4 @@
 import numpy as np
-import math
-import os
-from matplotlib import pyplot as plt
-from skimage import io
-import random
 from image_process import hotspots,circle_detection
 
 

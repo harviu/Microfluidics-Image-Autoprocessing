@@ -57,3 +57,4 @@ if __name__ == '__main__':
                 for row in rows:
                     csvwriter.writerow(row[0])
                     csvwriter.writerow(row[1])
+            print(sample_name + " finished processing")
