@@ -45,9 +45,16 @@ if __name__ == '__main__':
                     rows = p.map(one_process, cropped.items())
                 with open(csv_filename, 'w+', newline='') as csvfile:
                     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                    lines = []
+                    for i in range(len(rows[0][0])):
+                        lines.append([])
+                        lines.append([])
                     for row in rows:
-                        csvwriter.writerow(row[0])
-                        csvwriter.writerow(row[1])
+                        for index in range(len(row[0])):
+                            lines[index].append(row[0][index])
+                            lines[index].append(row[1][index])
+                    for line in lines:
+                        csvwriter.writerow(line)
                 print(sample_name + " finished processing")
             except:
                 print(sample_name + " cannot be processed")
