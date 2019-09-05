@@ -5,6 +5,7 @@ from skimage import feature, filters, io
 from skimage.morphology import disk
 from math import sqrt, pi, cos, sin
 from collections import defaultdict
+from scipy.ndimage.filters import gaussian_filter1d
 
 
 def nd2_read(fileName):
@@ -16,7 +17,7 @@ def nd2_read(fileName):
 def full_nd2_read(fileName):
     with Bioformats(fileName) as images:
         images.bundle_axes = "zyxc"
-        img = np.reshape(images[0], (int(images[0].shape[0]/5), 5,) + images[0].shape[1:])
+        img = np.reshape(images[0], (int(images[0].shape[0] / 5), 5,) + images[0].shape[1:])
         return img
 
 
@@ -24,46 +25,49 @@ def cut_full_image(img):
     output = {}
     for time in range(img.shape[0]):
         tmp_img = img[time, :, :]
-        COL_THRES = 80000
-        HOR_THRES = 90000
-        HOR_SHIFT = 30
-        LEFT = 48
+        CHAMBER_WIDTH = 46
+        LEFT = 55
         RIGHT = 15
-        DOWN = 70
-        c = 0
-        band_start = -1
-        verticle_lines = []
-        while c < tmp_img.shape[1]:
-            avg = np.sum(tmp_img[:, c, 0]) / tmp_img.shape[0]
-            if band_start == -1:
-                if (avg > COL_THRES):
-                    band_start = c
-            else:
-                if (avg <= COL_THRES) or c == tmp_img.shape[1] - 1:
-                    verticle_lines.append((band_start + c) // 2)
-                    band_start = -1
-            c += 1
+        DOWN = 71
+        vertical_lines = []
+        vertical_averages = []
+        for c in range(tmp_img.shape[1]):
+            avg = np.sum(tmp_img[:, c, 0])
+            vertical_averages.append(avg)
 
-        # print(verticle_lines)
-        for i in range(len(verticle_lines)):
-            verticle_slice = tmp_img[:, verticle_lines[i] - LEFT:verticle_lines[i] + RIGHT]
-            r = 0
-            band_start = -1
+        for i in range(4):
+            arg_max = np.argmax(vertical_averages)
+            start = max(arg_max-100, 0)
+            end = min(arg_max+100, len(vertical_averages))
+            for j in range(start,end):
+                vertical_averages[j] = 0
+            vertical_lines.append(arg_max)
+        vertical_lines.sort()
+        # print(vertical_lines)
+        assert len(vertical_lines) == 4
+
+        for i in range(len(vertical_lines)):
+            vertical_slice = tmp_img[:, vertical_lines[i] - LEFT:vertical_lines[i] + RIGHT]
             horizontal_lines = []
-            while r < tmp_img.shape[0]:
-                avg = np.sum(verticle_slice[r, LEFT - HOR_SHIFT:LEFT, 0]) / HOR_SHIFT
-                if band_start == -1:
-                    if (avg > HOR_THRES):
-                        band_start = r
-                else:
-                    if (avg <= HOR_THRES) or r == tmp_img.shape[0] - 1:
-                        horizontal_lines.append((band_start + r) // 2)
-                        band_start = -1
-                        r += DOWN - 1
-                r += 1
+            horizontal_avg = []
+            for r in range(vertical_slice.shape[0]):
+                avg = np.sum(vertical_slice[r, LEFT+RIGHT-CHAMBER_WIDTH:LEFT+RIGHT, 0])
+                horizontal_avg.append(avg)
+            cut = 6 if i%2 == 0 else 5
+
+            for k in range(cut):
+                arg_max = np.argmax(horizontal_avg)
+                start = max(arg_max - 10, 0)
+                end = min(arg_max + 100, len(horizontal_avg))
+                for j in range(start, end):
+                    horizontal_avg[j] = 0
+                horizontal_lines.append(arg_max)
+
+            assert (i%2 == 0 and len(horizontal_lines) == 6) or (i % 2 == 1 and len(horizontal_lines) == 5)
+            horizontal_lines.sort()
             # print(horizontal_lines)
             for j in range(len(horizontal_lines)):
-                horizontal_slice = verticle_slice[horizontal_lines[j]:horizontal_lines[j] + DOWN, :]
+                horizontal_slice = vertical_slice[horizontal_lines[j]:horizontal_lines[j] + DOWN, :]
                 key = "{}{}".format(i + 1, chr(97 + j))
                 if key not in output:
                     dims = list(img.shape)
@@ -86,7 +90,9 @@ def cut_full_image(img):
 def save_tiff_batch(output, sample_name):
     for key in output:
         img = output[key]
-        img = img.astype(np.int32)
+        # img = img.astype(np.int32)
+        img = img/np.max(img) * 255
+        img = img.astype(np.uint8)
         if not os.path.isdir("./result"):
             os.mkdir("./result")
         if not os.path.isdir("./result/{}/".format(sample_name)):
