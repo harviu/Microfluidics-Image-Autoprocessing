@@ -42,8 +42,9 @@ if __name__ == '__main__':
                 cropped = cut_full_image(nd2_image)
                 print(sample_name + " cropped")
 
-                with Pool(8) as p:
-                    rows = p.map(one_process, cropped.items())
+                p = Pool(8)
+                rows = p.map(one_process, cropped.items())
+                print("Saving files")
                 with open(csv_filename, 'w+', newline='') as csvfile:
                     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
                     lines = []
