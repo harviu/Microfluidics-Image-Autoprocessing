@@ -57,7 +57,6 @@ if __name__ == '__main__':
                     lines = []
                     for i in range(len(rows[0][0])):
                         lines.append([])
-                        lines.append([])
                     for row in rows:
                         for index in range(len(row[0])):
                             lines[index].append(row[0][index])
