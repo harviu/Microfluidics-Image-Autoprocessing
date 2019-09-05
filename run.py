@@ -4,6 +4,7 @@ import os
 import re
 import csv
 from multiprocessing import Pool
+from datetime import datetime
 
 
 def one_process(pair):
@@ -37,14 +38,20 @@ if __name__ == '__main__':
             sample_name = os.path.splitext(filename)[0]
             csv_filename = output_dirname + '/' + sample_name + '.csv'
             try:
+                start = datetime.now()
                 nd2_image = sum_z(full_nd2_read(nd2_filename))
-                print(sample_name + " loaded")
+                end = datetime.now()
+                print(sample_name + " loaded, time used: "+str(end-start))
+                start = datetime.now()
                 cropped = cut_full_image(nd2_image)
-                print(sample_name + " cropped")
+                end = datetime.now()
+                print(sample_name + " cropped, time used: "+str(end-start))
 
+                start = datetime.now()
                 p = Pool(8)
                 rows = p.map(one_process, cropped.items())
-                print("Saving files")
+                end = datetime.now()
+                print(sample_name + " processed, time used: "+str(end-start))
                 with open(csv_filename, 'w+', newline='') as csvfile:
                     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
                     lines = []
