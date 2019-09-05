@@ -40,6 +40,7 @@ if __name__ == '__main__':
                 nd2_image = sum_z(full_nd2_read(nd2_filename))
                 print(sample_name + " loaded")
                 cropped = cut_full_image(nd2_image)
+                print(sample_name + " cropped")
 
                 with Pool(8) as p:
                     rows = p.map(one_process, cropped.items())
