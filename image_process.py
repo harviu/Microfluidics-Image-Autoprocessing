@@ -63,7 +63,7 @@ def cut_full_image(img):
                     horizontal_avg[j] = 0
                 horizontal_lines.append(arg_max)
 
-            assert (i%2 == 0 and len(horizontal_lines) == 6) or (i % 2 == 1 and len(horizontal_lines) == 5)
+            assert len(horizontal_lines) == cut
             horizontal_lines.sort()
             # print(horizontal_lines)
             for j in range(len(horizontal_lines)):

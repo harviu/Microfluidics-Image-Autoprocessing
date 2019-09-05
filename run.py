@@ -38,8 +38,8 @@ if __name__ == '__main__':
             csv_filename = output_dirname + '/' + sample_name + '.csv'
             try:
                 nd2_image = sum_z(full_nd2_read(nd2_filename))
-                cropped = cut_full_image(nd2_image)
                 print(sample_name + " loaded")
+                cropped = cut_full_image(nd2_image)
 
                 with Pool(8) as p:
                     rows = p.map(one_process, cropped.items())
