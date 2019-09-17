@@ -42,6 +42,7 @@ if __name__ == '__main__':
                 nd2_image = sum_z(full_nd2_read(nd2_filename))
                 end = datetime.now()
                 print(sample_name + " loaded, time used: "+str(end-start))
+
                 start = datetime.now()
                 cropped = cut_full_image(nd2_image)
                 end = datetime.now()

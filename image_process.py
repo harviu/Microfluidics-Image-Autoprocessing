@@ -18,6 +18,9 @@ def full_nd2_read(fileName):
     with Bioformats(fileName) as images:
         images.bundle_axes = "zyxc"
         img = np.reshape(images[0], (int(images[0].shape[0] / 5), 5,) + images[0].shape[1:])
+        if (img.shape[0]<10):
+            images.bundle_axes = "tzyxc"
+            img = images[0]
         return img
 
 
@@ -43,7 +46,6 @@ def cut_full_image(img):
                 vertical_averages[j] = 0
             vertical_lines.append(arg_max)
         vertical_lines.sort()
-        # print(vertical_lines)
         assert len(vertical_lines) == 4
 
         for i in range(len(vertical_lines)):
@@ -229,5 +231,5 @@ def hotspots(image, COUNT_THRES=12):
         hot = circle_detection(summed_edge, threshold=thres, binary_input=True)
         thres -= 0.1
     if len(hot) == 0:
-        raise ValueError('impropriate input')
+        return None
     return sorted(hot, key=lambda x: -x[0])[0]

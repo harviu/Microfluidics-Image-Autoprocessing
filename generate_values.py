@@ -9,6 +9,8 @@ def calculate(image, ENLARGE=3, SHIFT=15):
     time_steps = image.shape[0]
     # culculate hotspots
     hot = hotspots(image)
+    if not hot:
+        return ([0]*image.shape[0], None, 0)
     hv, hy, hx, hr = hot
     # print(hot)
 
