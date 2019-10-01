@@ -40,7 +40,10 @@ def calculate(image, ENLARGE=3, SHIFT=15):
                 if (row - y) ** 2 + (x - col) ** 2 <= (r + ENLARGE) ** 2 and 0 <= row < gfp.shape[0] and 0 <= col < \
                         gfp.shape[1]:
                     dots.append(gfp[row, col])
-        val = max(dots)
+        # val = max(dots)
+        # take average of 5 max values
+        dots.sort(reverse=True)
+        val = sum(dots[:5])/5
         val = int(val)
         values.append(val - background)
     return (values, chosens, hv)
