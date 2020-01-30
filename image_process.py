@@ -6,6 +6,7 @@ from skimage.morphology import disk
 from math import sqrt, pi, cos, sin
 from collections import defaultdict
 from scipy.ndimage.filters import gaussian_filter1d
+from matplotlib import pyplot as plt
 
 
 def nd2_read(fileName):
@@ -16,9 +17,10 @@ def nd2_read(fileName):
 
 def full_nd2_read(fileName):
     with Bioformats(fileName) as images:
-        images.bundle_axes = "zyxc"
-        img = np.reshape(images[0], (int(images[0].shape[0] / 5), 5,) + images[0].shape[1:])
-        if (img.shape[0]<10):
+        if len(images.sizes) == 4:
+            images.bundle_axes = "zyxc"
+            img = np.reshape(images[0], (int(images[0].shape[0] / 5), 5,) + images[0].shape[1:])
+        else:
             images.bundle_axes = "tzyxc"
             img = images[0]
         return img
@@ -92,9 +94,9 @@ def cut_full_image(img):
 def save_tiff_batch(output, sample_name):
     for key in output:
         img = output[key]
-        # img = img.astype(np.int32)
-        img = img/np.max(img) * 255
-        img = img.astype(np.uint8)
+        img = img.astype(np.int32)
+        # img = img/np.max(img) * 255
+        # img = img.astype(np.uint8)
         if not os.path.isdir("./result"):
             os.mkdir("./result")
         if not os.path.isdir("./result/{}/".format(sample_name)):
